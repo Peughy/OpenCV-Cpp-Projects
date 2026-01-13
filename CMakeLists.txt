@@ -5,8 +5,10 @@ project( learnopencv )
 find_package( OpenCV REQUIRED )
 
 include_directories( ${OpenCV_INCLUDE_DIRS}  include/)
-add_library(shapeDetectionLib src/shape_detection.cpp)
+# add_library(shapeDetectionLib src/shape_detector.cpp)
+# add_library(colorDetectionLib src/color_detector.cpp)
+add_library(virtualPrinterLib src/virtual_printer.cpp)
 
 
 add_executable( program main.cpp )
-target_link_libraries( program ${OpenCV_LIBS} shapeDetectionLib)
+target_link_libraries( program ${OpenCV_LIBS} virtualPrinterLib)

@@ -1,17 +1,12 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
-#include "shape_detection.hpp"
+#include "shape_detector.hpp"
+
+ShapeDetector::ShapeDetector(VideoCapture capture) : cap(capture) {}
 
 void ShapeDetector::detectShapes()
 {
-
-    cv::VideoCapture cap(0); // Open the default camera
-    if (!cap.isOpened())
-    { // Check if we succeeded
-        std::cerr << "[ERREUR] Probleme d'ouverture de la camera." << std::endl;
-        return;
-    }
 
     cv::Mat frame;
     cv::Mat grayFrame, blurFrame, cannyFrame, dilFrame;
