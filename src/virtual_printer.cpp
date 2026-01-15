@@ -30,7 +30,7 @@ cv::Point VirtualPrinter::getContours(cv::Mat &frame, cv::Mat &maskFrame)
 
     for (int i = 0; i < contours.size(); i++)
     {
-        double area = cv::contourArea(contours[i]); 
+        double area = cv::contourArea(contours[i]);
 
         if (area > 1000)
         {
@@ -44,8 +44,8 @@ cv::Point VirtualPrinter::getContours(cv::Mat &frame, cv::Mat &maskFrame)
             drawingPoint.x = boundRect[i].x + boundRect[i].width / 2;
             drawingPoint.y = boundRect[i].y;
 
-            cv::drawContours(frame, conPoly, i, cv::Scalar(0, 255, 0), 2);
-            cv::rectangle(frame, boundRect[i].tl(), boundRect[i].br(), cv::Scalar(0, 255, 0), 5);
+            cv::drawContours(frame, conPoly, i, cv::Scalar(0, 0, 0), 0.5);
+            // cv::rectangle(framse, boundRect[i].tl(), boundRect[i].br(), cv::Scalar(0, 255, 0), 5);
         }
     }
 
@@ -67,7 +67,7 @@ cv::Mat VirtualPrinter::getColors(cv::Mat &frame, std::vector<std::vector<int>> 
 
         // detect color
         cv::inRange(hsvFrame, lower, upper, maskFrame);
-        cv::imshow("Mask", maskFrame);
+        // cv::imshow(std::to_string(i), maskFrame);
 
         // find contours and get point
         cv::Point point = getContours(frame, maskFrame);
@@ -83,10 +83,17 @@ void VirtualPrinter::drawOnCanvas()
 {
 
     std::vector<std::vector<int>> colors = {
-        {255, 0, 0}};
+        {255, 0, 0},   //     blue
+        // {0, 255, 255}, // yellow
+        {0, 255, 0},   // green
+        {255, 0, 255}};
 
     std::vector<std::vector<int>> hsvColorsValues = {
-        {120, 0, 127, 140, 255, 255}};
+        {104, 108, 66, 158, 255, 236}, // blue
+        // {18, 0, 0, 129, 255, 255},     // yellow
+        {44, 0, 0, 94, 255, 255},      // green
+        {103, 187, 97, 179, 255, 255}, // pink
+    };
 
     cv::Mat capFrame, frame;
 
@@ -95,17 +102,23 @@ void VirtualPrinter::drawOnCanvas()
         cap.read(capFrame);
         cv::resize(capFrame, frame, cv::Size(760, 680));
 
-        cv::putText(frame, "Press 'R' for reste", cv::Point(50, 50), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(0, 0, 255));
+        cv::putText(frame, "Press 'R' for clear", cv::Point(50, 50), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(0, 0, 0));
         cv::putText(frame, "Press 'ESC' for quit", cv::Point(50, 100), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, cv::Scalar(0, 0, 255));
 
         // detect colors
         getColors(frame, hsvColorsValues);
+
+        if (points.size() == 0)
+        {
+            cv::putText(frame, "No color detected", cv::Point(50, 630), cv::FONT_HERSHEY_COMPLEX_SMALL, 1.3, cv::Scalar(0, 255, 0));
+        }
 
         for (int i = 0; i < points.size(); i++)
         {
 
             int idxColor = points[i][2];
             cv::circle(frame, cv::Point(points[i][0], points[i][1]), 5, cv::Scalar(colors[idxColor][0], colors[idxColor][1], colors[idxColor][2]), cv::FILLED);
+            cv::rectangle(frame, cv::Point(100, 580), cv::Point(50, 630), cv::Scalar(colors[idxColor][0], colors[idxColor][1], colors[idxColor][2]), cv::FILLED);
         }
 
         // Show frame

@@ -26,7 +26,7 @@ void ColorDetector::detectColors()
 
         cv::cvtColor(frame, hsvFrame, cv::COLOR_BGR2HSV);
         cv::inRange(hsvFrame, cv::Scalar(hmin, smin, vmin), cv::Scalar(hmax, smax, vmax), mask);
-        // std::cout << hmin << "," << smin << "," << vmin << "," << hmax << "," << smax << "," << vmax << std::endl;
+        std::cout << hmin << "," << smin << "," << vmin << "," << hmax << "," << smax << "," << vmax << std::endl;
 
         cv::imshow("HSV frame", hsvFrame);
         cv::imshow("Original Frame", frame);
